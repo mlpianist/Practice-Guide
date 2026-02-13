@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Music Practice Guide</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --red-soft: #ef4444;
+      --blue-soft: #60a5fa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      max-width: 540px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      padding: 28px 32px;
+      text-align: center;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .content {
+      padding: 32px;
+    }
+
+    h2 {
+      font-size: 1.32rem;
+      font-weight: 600;
+      margin-bottom: 1.4rem;
+      color: var(--text);
+    }
+
+    p.instruction {
+      font-size: 1.05rem;
+      margin-bottom: 1.8rem;
+      color: #334155;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 8px 12px 8px 0;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      margin: 16px 0 24px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    .slider-container {
+      margin: 28px 0 32px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 10px;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, var(--blue-soft), var(--red-soft));
+      border-radius: 5px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 10px;
+      cursor: pointer;
+      background: linear-gradient(to right, var(--blue-soft), var(--red-soft));
+      border-radius: 5px;
+    }
+
+    input[type="range"]::-moz-range-track {
+      width: 100%;
+      height: 10px;
+      cursor: pointer;
+      background: linear-gradient(to right, var(--blue-soft), var(--red-soft));
+      border-radius: 5px;
+    }
+
+    input[type="range"]::-moz-range-progress {
+      background: linear-gradient(to right, var(--blue-soft), var(--red-soft));
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+      margin-top: -7px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: white;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .measure-display {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 24px 0 32px;
+      color: var(--primary);
+      background: #eff6ff;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Music Practice Guide</h1>
+  </div>
+
+  <div class="content" id="app">
+    <!-- All screens are toggled via JS -->
+  </div>
+</div>
+
+<script>
+  // State
+  let tryAgainCount = 0;
+  let lastInstructionBeforeQ6 = null;
+
+  const app = document.getElementById("app");
+
+  function clear() {
+    app.innerHTML = "";
+  }
+
+  function showQuestion1() {
+    clear();
+    app.innerHTML = `
+      <h2>Will you practice the whole piece?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ1('yes')">Yes</button>
+        <button class="btn btn-secondary" onclick="answerQ1('no')">No</button>
+      </div>
+    `;
+  }
+
+  function answerQ1(choice) {
+    if (choice === "yes") {
+      showQuestion2();
+    } else {
+      showQuestion7();
+    }
+  }
+
+  function showQuestion2() {
+    clear();
+    app.innerHTML = `
+      <h2>Have you memorized the whole piece?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ2('yes')">Yes</button>
+        <button class="btn btn-secondary" onclick="answerQ2('no')">No</button>
+      </div>
+    `;
+  }
+
+  function answerQ2(choice) {
+    if (choice === "yes") {
+      showQuestion3();
+    } else {
+      showInstruction4();
+    }
+  }
+
+  function showInstruction4() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">You need to practice the specific parts you haven't memorized yet.</p>
+      <button class="btn btn-primary" onclick="showQuestion7()">Practice specific parts</button>
+    `;
+  }
+
+  function showQuestion3() {
+    clear();
+    app.innerHTML = `
+      <h2>Can you play the whole piece without a single mistake?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ3('yes')">Yes</button>
+        <button class="btn btn-secondary" onclick="answerQ3('no')">No</button>
+      </div>
+    `;
+  }
+
+  function answerQ3(choice) {
+    if (choice === "yes") {
+      showInstruction1();
+    } else {
+      showInstruction5();
+    }
+  }
+
+  function showInstruction1() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">Try to play the piece one time without a mistake.</p>
+      <button class="btn btn-success" onclick="answerAfterInstr1()">Done</button>
+    `;
+    lastInstructionBeforeQ6 = showInstruction1;
+  }
+
+  function answerAfterInstr1() {
+    showQuestion4();
+  }
+
+  function showQuestion4() {
+    clear();
+    app.innerHTML = `
+      <h2>Were you able to play the piece without a mistake?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ4('yes')">Yes</button>
+        <button class="btn btn-secondary" onclick="answerQ4('no')">No</button>
+      </div>
+    `;
+  }
+
+  function answerQ4(choice) {
+    if (choice === "yes") {
+      showInstruction2();
+    } else {
+      showQuestion6();
+    }
+  }
+
+  function showInstruction2() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">Try to play the piece two times in a row without a mistake.</p>
+      <button class="btn btn-success" onclick="answerAfterInstr2()">Done</button>
+    `;
+    lastInstructionBeforeQ6 = showInstruction2;
+  }
+
+  function answerAfterInstr2() {
+    showQuestion5();
+  }
+
+  function showQuestion5() {
+    clear();
+    app.innerHTML = `
+      <h2>Were you able to play the piece two times in a row without a mistake?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ5('yes')">Yes</button>
+        <button class="btn btn-secondary" onclick="answerQ5('no')">No</button>
+      </div>
+    `;
+  }
+
+  function answerQ5(choice) {
+    if (choice === "yes") {
+      showInstruction3();
+    } else {
+      showQuestion6();
+    }
+  }
+
+  function showInstruction3() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">You have practiced this piece enough, it's time to practice another piece.</p>
+      <button class="btn btn-primary" onclick="showQuestion1()">Practice another piece</button>
+    `;
+  }
+
+  function showInstruction5() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">
+        Make a list of at least 4 specific parts where you make a mistake. If you're not sure where you make a mistake, play the whole piece and when you make a mistake, stop and write down where the mistake happened, then continue playing the piece from where you stopped. Do this until you have a list of 4 or more specific parts to practice.
+      </p>
+      <button class="btn btn-success" onclick="showQuestion7()">Done</button>
+    `;
+  }
+
+  function showQuestion6() {
+    clear();
+    app.innerHTML = `
+      <h2>Do you want to try again or practice specific parts?</h2>
+      <div class="choices">
+        <button class="btn btn-primary" onclick="answerQ6('try')">Try again</button>
+        <button class="btn btn-secondary" onclick="answerQ6('specific')">Practice specific parts</button>
+      </div>
+    `;
+  }
+
+  function answerQ6(choice) {
+    if (choice === "try") {
+      tryAgainCount++;
+      if (tryAgainCount >= 3) {
+        tryAgainCount = 0;
+        clear();
+        app.innerHTML = `
+          <p class="instruction">It is time to practice specific parts.</p>
+          <button class="btn btn-primary" onclick="showQuestion7()">Practice specific parts</button>
+        `;
+      } else if (lastInstructionBeforeQ6) {
+        lastInstructionBeforeQ6();
+      } else {
+        showInstruction1(); // fallback
+      }
+    } else {
+      tryAgainCount = 0;
+      showQuestion7();
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  // Specific part practice
+  // ──────────────────────────────────────────────
+
+  let currentMeasures = "";
+
+  function showQuestion7() {
+    clear();
+    tryAgainCount = 0;
+    app.innerHTML = `
+      <h2>What part would you like to practice?<br><small>Type the measure number or numbers (e.g. 5 or 7-12)</small></h2>
+      <input type="text" id="measuresInput" placeholder="e.g. 42 or 8-15" />
+      <button class="btn btn-primary" onclick="startSpecificPractice()">Start practicing this part</button>
+    `;
+  }
+
+  function startSpecificPractice() {
+    const input = document.getElementById("measuresInput").value.trim();
+    if (!input) return alert("Please enter measure number(s).");
+
+    if (!/^\d+(?:-\d+)?$/.test(input) || input.includes('--') || input.endsWith('-')) {
+      return alert("Please use format like: 5  or  7-14\n(numbers in ascending order only)");
+    }
+
+    if (input.includes('-')) {
+      const [start, end] = input.split('-').map(Number);
+      if (start >= end) {
+        return alert("Range must be ascending (e.g. 7-14, not 14-7 or 5-5)");
+      }
+    }
+
+    currentMeasures = input;
+
+    const isSingle = !input.includes("-");
+
+    if (isSingle) {
+      showQuestion8();
+    } else {
+      showQuestion9();
+    }
+  }
+
+  function showQuestion8() {
+    clear();
+    app.innerHTML = `
+      <h2>From 1-10, how hard is measure ${currentMeasures}?<br><small>1 = easiest · 10 = hardest<br>(If never practiced before → 10)</small></h2>
+      <div class="slider-container">
+        <input type="range" id="difficulty" min="1" max="10" value="5" step="1" />
+        <div style="text-align:center; margin-top:12px; font-size:1.1rem;">
+          <span id="sliderValue">5</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="submitDifficulty(8)">OK</button>
+    `;
+    const slider = document.getElementById("difficulty");
+    const val = document.getElementById("sliderValue");
+    slider.oninput = () => val.textContent = slider.value;
+  }
+
+  function showQuestion9() {
+    clear();
+    app.innerHTML = `
+      <h2>From 1-10, how hard is this section (${currentMeasures})?<br><small>1 = easiest · 10 = hardest</small></h2>
+      <div class="slider-container">
+        <input type="range" id="difficulty" min="1" max="10" value="5" step="1" />
+        <div style="text-align:center; margin-top:12px; font-size:1.1rem;">
+          <span id="sliderValue">5</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="submitDifficulty(9)">OK</button>
+    `;
+    const slider = document.getElementById("difficulty");
+    const val = document.getElementById("sliderValue");
+    slider.oninput = () => val.textContent = slider.value;
+  }
+
+  function submitDifficulty(mode) {
+    const diff = parseInt(document.getElementById("difficulty").value);
+    showMeasureAndInstruction(mode, diff);
+  }
+
+  function getMeasureLabel() {
+    if (!currentMeasures.includes("-")) {
+      return `Measure ${currentMeasures}`;
+    } else {
+      return `Measures ${currentMeasures}`;
+    }
+  }
+
+  function showMeasureAndInstruction(mode, difficulty) {
+    clear();
+    const label = getMeasureLabel();
+    let instrHTML = "";
+
+    if (mode === 8) { // single measure
+      if (difficulty >= 8) {
+        instrHTML = `
+          <p class="instruction">
+            <strong>Practice one hand at a time slowly:</strong><br>
+            For each hand, read the notes first, then the notes with the finger numbers, then the notes with the finger numbers and rhythm, then repeat this over and over until you've memorized the notes, finger numbers, rhythm, and most importantly, how it sounds.<br><br>
+            <strong>Reminders:</strong> Read carefully. Do not be impatient. Play slowly at first. Pause for a few seconds between each step so your mind can relax.
+          </p>
+          <button class="btn btn-success" onclick="showInstruction7Single()">Done</button>
+        `;
+        app.innerHTML = `
+          <div class="measure-display">${label}</div>
+          ${instrHTML}
+        `;
+      } else if (difficulty >= 4) {
+        instrHTML = getInstruction7HTML(() => showInstruction8());
+        app.innerHTML = `
+          <div class="measure-display">${label}</div>
+          ${instrHTML}
+        `;
+      } else {
+        instrHTML = getInstruction9HTML(() => showInstruction8());
+        app.innerHTML = `
+          <div class="measure-display">${label}</div>
+          ${instrHTML}
+        `;
+      }
+    } else { // multiple measures
+      if (difficulty >= 8) {
+        instrHTML = `
+          <p class="instruction">You should practice this part one measure at a time first.</p>
+          <button class="btn btn-primary" onclick="showQuestion7()">Practice one measure at a time</button>
+        `;
+        app.innerHTML = instrHTML;
+      } else if (difficulty >= 4) {
+        instrHTML = `
+          <p class="instruction">
+            <strong>Practice this part one hand at a time slowly from memory.</strong><br>
+            Make sure you can play each hand without looking at it (except for parts when there's a big jump).<br><br>
+            Next, gradually speed up each hand until you can play each hand faster than the real tempo of the music.<br><br>
+            Finally, play the whole part hands together slowly 5-10× in a row perfectly.<br><br>
+            <strong>Reminders:</strong> Start by playing slowly. Pause for a few seconds between each repeat. If playing the whole part is still difficult, try practicing a smaller part next.
+          </p>
+          <button class="btn btn-success" onclick="showInstruction8()">Done</button>
+        `;
+        app.innerHTML = `
+          <div class="measure-display">${label}</div>
+          ${instrHTML}
+        `;
+      } else {
+        instrHTML = getInstruction9HTML(() => showInstruction8());
+        app.innerHTML = `
+          <div class="measure-display">${label}</div>
+          ${instrHTML}
+        `;
+      }
+    }
+  }
+
+  function getInstruction7HTML(onDone) {
+    return `
+      <p class="instruction">
+        <strong>Practice hands together slowly from memory.</strong><br>
+        Repeat the measure this way until you can play it 5-10× perfectly in a row.<br><br>
+        If this is hard, play slower.<br><br>
+        If it's still hard, divide the measure into two halves (it doesn't have to be exactly divided) and repeat each half hands together slowly from memory until you can play each half 5× perfectly in a row. Then repeat the measure this way until you can play it 5-10× perfectly in a row.<br><br>
+        <strong>Reminders:</strong> Avoid looking back and forth between your hands. Your hands and fingers should find the notes even if you close your eyes. The only exception is when your hand has to make a big jump.
+      </p>
+      <button class="btn btn-success" onclick="(${onDone.toString()})()">Done</button>
+    `;
+  }
+
+  function showInstruction7Single() {
+    clear();
+    const label = getMeasureLabel();
+    app.innerHTML = `
+      <div class="measure-display">${label}</div>
+      ${getInstruction7HTML(() => showInstruction8())}
+    `;
+  }
+
+  function getInstruction9HTML(onDone) {
+    return `
+      <p class="instruction">
+        Play hands together slowly from memory, then a bit faster, then a bit faster.<br>
+        Keep raising the speed until you start to have a bit of difficulty.<br>
+        Then play a bit slower 5-10× in a row perfectly.<br><br>
+        <strong>Reminders:</strong> If it's hard to play 5-10× in a row perfectly, then play slower. You can use the metronome to gradually speed up.
+      </p>
+      <button class="btn btn-success" onclick="(${onDone.toString()})()">Done</button>
+    `;
+  }
+
+  function showInstruction8() {
+    clear();
+    app.innerHTML = `
+      <p class="instruction">Pause for a few seconds then practice the next part you need to practice.</p>
+      <button class="btn btn-primary" onclick="showQuestion7()">Practice next part</button>
+    `;
+  }
+
+  // Start the app
+  showQuestion1();
+</script>
+</body>
+</html>
