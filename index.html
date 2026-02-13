@@ -238,15 +238,17 @@
   }
 
   function showQuestion1() {
-    clear();
-    app.innerHTML = `
+  clear();
+  app.innerHTML = `
+    <div style="text-align: center;">
       <h2>Will you practice the whole piece?</h2>
-      <div class="choices">
+      <div class="choices" style="justify-content: center; margin-top: 2rem;">
         <button class="btn btn-primary" onclick="answerQ1('yes')">Yes</button>
         <button class="btn btn-secondary" onclick="answerQ1('no')">No</button>
       </div>
-    `;
-  }
+    </div>
+  `;
+}
 
   function answerQ1(choice) {
     if (choice === "yes") {
@@ -616,3 +618,4 @@
 </script>
 </body>
 </html>
+
